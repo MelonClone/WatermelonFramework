@@ -1,0 +1,3 @@
+include ':circular-progress-view'
+include ':app'
+rootProject.name = "WatermelonFramework"

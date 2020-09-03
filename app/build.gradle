@@ -1,0 +1,120 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+// 업로드용
+publish {
+    userOrg = 'watermelon'
+    groupId = 'watermelon'
+    artifactId = 'framework'
+    publishVersion = lib_version.publish
+    desc = 'Watermelon sugar high'
+    website = 'https://github.com/MelonClone'
+    issueTracker = "${website}/issues"
+    repository = "${website}.git"
+}
+
+logger.quiet(publish.publishVersion)
+
+android {
+    compileSdkVersion build_versions.compile_sdk
+    buildToolsVersion build_versions.build_tools
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+//        applicationId "org.watermelon.framework"
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode 1
+        versionName "1.0"
+//        renderscriptTargetApi 19
+//        renderscriptSupportModeEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Android Support
+    api "androidx.appcompat:appcompat:$versions.appcompat"
+    api "androidx.constraintlayout:constraintlayout:$versions.constraintlayout"
+    api "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
+    api "com.android.support:recyclerview-v7:${build_versions.supportLibraryVersion}"
+
+    // Utils
+    compileOnly "org.projectlombok:lombok:$versions.lombok"
+    annotationProcessor "org.projectlombok:lombok:$versions.lombok"
+
+    // Test
+    testImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "androidx.test.ext:junit:$versions.atsl_junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$versions.atsl_espresso"
+
+    // Network
+    api "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    api "com.squareup.retrofit2:converter-scalars:$versions.retrofit"
+    api "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    api "io.jsonwebtoken:jjwt-api:$versions.jjwt"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:$versions.jjwt"
+    runtimeOnly("io.jsonwebtoken:jjwt-orgjson:$versions.jjwt") {
+        exclude group: 'org.json', module: 'json' //provided by Android natively
+    }
+
+    // Database
+    api "androidx.room:room-runtime:$versions.room"
+    annotationProcessor "androidx.room:room-compiler:$versions.room"
+    testImplementation "androidx.room:room-testing:$versions.room"
+
+    // UI Libs
+//    implementation 'com.github.fornewid:neumorphism:0.1.10'
+//    api project(':circular-progress-view')
+//    implementation "com.github.guilhe:circular-progress-view:circular_progress"
+    api "com.github.bumptech.glide:glide:$versions.glide"
+    annotationProcessor "com.github.bumptech.glide:compiler:$versions.glide"
+    api("com.alibaba.android:ultraviewpager:${versions.ultra_viewpager}@aar") {
+        transitive = true
+    }
+    api "com.google.android.material:material:$versions.appbar"
+
+    // Media
+    api "com.google.android.exoplayer:exoplayer:$versions.exoplayer"
+}
+
+// Local 업로드
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository (url: "http://localhost:5000/repository/thirdparty") {
+                authentication(userName: "admin", password: "nexus1234")
+                pom.version = publish.publishVersion
+                pom.artifactId = publish.artifactId
+                pom.groupId = publish.groupId
+                pom.packaging = "aar"
+                pom.withXml {
+                    asNode().dependencies.'*'.findAll() {
+                        it.scope.text() == 'runtime' && project.configurations.compile.allDependencies.find { dep ->
+                            dep.name == it.artifactId.text()
+                        }
+                    }.each() {
+                        it.scope*.value = 'compile'
+                    }
+                }
+            }
+
+        }
+    }
+}

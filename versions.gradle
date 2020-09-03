@@ -1,0 +1,66 @@
+
+/**
+ * Shared file between builds so that they can all use the same dependencies and
+ * maven repositories.
+ **/
+
+def lib_version = [:]
+lib_version.publish = '0.0.9'
+ext.lib_version = lib_version
+
+def build_versions = [:]
+build_versions.min_sdk = 23
+build_versions.target_sdk = 29
+build_versions.compile_sdk = 29
+build_versions.build_tools = '29.0.3'
+build_versions.supportLibraryVersion = '28.0.0'
+ext.build_versions = build_versions
+
+def versions = [:]
+// classpath
+versions.android_gradle_plugin = '4.0.0'
+versions.bintray = '0.8.1'
+versions.android_maven_publish = '3.6.2'
+
+// Android Support
+versions.appcompat = "1.1.0"
+versions.constraintlayout = "1.1.3"
+versions.lifecycle = "2.2.0"
+versions.annotation = "1.1.0"
+
+// Utils
+versions.lombok = "1.18.12"
+
+// Test
+versions.junit = "4.12"
+versions.atsl_junit = "1.1.1"
+versions.atsl_espresso = "3.2.0"
+
+// Network
+versions.retrofit = "2.9.0"
+versions.jjwt = "0.11.2"
+
+// Database
+versions.room = "2.2.5"
+
+// UI Libs
+versions.glide = "4.11.0"
+versions.circular_progress = "1.4.2"
+versions.ultra_viewpager = "1.0.7.7"
+versions.appbar = "1.2.0"
+
+// Media
+versions.exoplayer = "2.11.7"
+
+ext.versions = versions
+
+def deps = [:]
+ext.deps = deps
+
+def addRepos(RepositoryHandler handler) {
+    handler.google()
+    handler.jcenter()
+    handler.maven { url "https://jitpack.io" }
+    handler.maven { url "http://localhost:5000/repository/thirdparty" }
+}
+ext.addRepos = this.&addRepos
