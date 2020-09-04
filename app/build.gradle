@@ -98,7 +98,7 @@ apply plugin: 'maven'
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository (url: "http://localhost:5000/repository/thirdparty") {
+            repository (url: "http://mymaven.devgd.com:5000/repository/thirdparty") {
                 authentication(userName: "admin", password: "nexus1234")
                 pom.version = publish.publishVersion
                 pom.artifactId = publish.artifactId

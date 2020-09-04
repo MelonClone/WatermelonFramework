@@ -26,6 +26,7 @@ public interface MusicPlayer {
     boolean isPlaying();
     boolean isDestroyed();
     void setVolume(float volume);
+    float getVolume();
     boolean isPrepared();
     long getDuration();
     long getCurrentPosition();

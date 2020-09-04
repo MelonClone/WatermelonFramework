@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.Surface;
 
-
 import org.watermelon.framework.global.media.control.MixPlayerControl;
 import org.watermelon.framework.global.media.control.MusicPlayerControl;
 import org.watermelon.framework.global.media.control.PlayerController;
@@ -32,8 +31,6 @@ public class PlayManager implements MixPlayerControl, VideoPlayerControl {
     ProgressTimerHandler mProgressHandler = new ProgressTimerHandler();
     private List<PlaytimeListener> playtimeListenerList = new ArrayList<>();
 
-    @Setter
-    private Context mContext;
     private boolean isMixPlay = false;
 
     private PlayManager() {
@@ -202,6 +199,14 @@ public class PlayManager implements MixPlayerControl, VideoPlayerControl {
             return ;
         }
         mainPlayerController.setVolume(volume);
+    }
+
+    @Override
+    public float getVolume() {
+        if (!isSetPlayer()) {
+            return 0;
+        }
+        return mainPlayerController.getVolume();
     }
 
     @Override

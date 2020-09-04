@@ -176,7 +176,13 @@ public class AndroidMediaPlayer implements MusicPlayer {
 
     @Override
     public void setVolume(float volume) {
+        this.volume = volume;
         player.setVolume(volume, volume);
+    }
+
+    @Override
+    public float getVolume() {
+        return this.volume;
     }
 
     @Override

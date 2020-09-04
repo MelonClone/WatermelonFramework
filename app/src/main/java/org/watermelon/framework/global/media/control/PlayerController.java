@@ -154,6 +154,11 @@ public class PlayerController extends Thread implements VideoPlayerControl {
         mediaPlayer.setVolume(volume);
     }
 
+    @Override
+    public float getVolume() {
+        return mediaPlayer.getVolume();
+    }
+
     public void setDisplay(Surface surface) {
         mediaPlayer.setDisplay(surface);
     }

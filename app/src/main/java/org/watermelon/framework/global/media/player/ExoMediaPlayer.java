@@ -144,6 +144,11 @@ public class ExoMediaPlayer implements MusicPlayer {
     }
 
     @Override
+    public float getVolume() {
+        return player.getVolume();
+    }
+
+    @Override
     public boolean isPrepared() {
         return prepared;
     }
