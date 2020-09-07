@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.room.RoomDatabase;
 
+import org.watermelon.framework.global.db.version.MigrationContainer;
 import org.watermelon.framework.utils.TypefaceUtil;
 import org.watermelon.framework.utils.db.DBHelper;
 import org.watermelon.framework.utils.db.SPHelper;
@@ -13,6 +14,7 @@ public abstract class BaseApplication extends Application {
     public abstract String getDatabaseName();
     public abstract String getSharedPreferenceName();
     public abstract <D extends RoomDatabase> Class<D> getDatabaseClass();
+    public abstract MigrationContainer getMigrationContainer();
 
     @Override
     public void onCreate() {
@@ -23,7 +25,7 @@ public abstract class BaseApplication extends Application {
         );
 
         if (getDatabaseClass() != null) {
-            DBHelper.getInstance().init(this, getDatabaseClass());
+            DBHelper.getInstance().init(this, getDatabaseClass(), getMigrationContainer());
         }
         SPHelper.getInstance().init(this);
 

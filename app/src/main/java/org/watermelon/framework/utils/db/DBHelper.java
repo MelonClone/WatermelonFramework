@@ -4,10 +4,9 @@ import android.content.Context;
 
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.migration.Migration;
 
 import org.watermelon.framework.global.consts.Constants;
-import org.watermelon.framework.global.db.version.VersionMigration;
+import org.watermelon.framework.global.db.version.MigrationContainer;
 
 
 public class DBHelper {
@@ -29,12 +28,15 @@ public class DBHelper {
         return INSTANCE;
     }
 
-    public <D extends RoomDatabase> void init(Context appContext, Class<D> database) {
+    public <D extends RoomDatabase> void init(Context appContext, Class<D> database, MigrationContainer migrationContainer) {
         this.appContext = appContext;
-        this.database = Room.databaseBuilder(appContext.getApplicationContext(),
-                database, Constants.DB_NAME+".db")
-                .addMigrations(VersionMigration.getInstance().getMigrationList().toArray(new Migration[0]))
-                .build();
+
+        RoomDatabase.Builder<D> roomBuilder = Room.databaseBuilder(appContext.getApplicationContext(),
+                database, Constants.DB_NAME+".db");
+        if (migrationContainer.getMigrationListAsArray() != null) {
+            roomBuilder.addMigrations(migrationContainer.getMigrationListAsArray());
+        }
+        this.database = roomBuilder.build();
     }
 
     public RoomDatabase getDB() {
