@@ -13,7 +13,7 @@ import org.watermelon.framework.global.media.listener.ReadyListener;
 
 import java.io.IOException;
 
-public class AndroidMediaPlayer implements MusicPlayer {
+public class MediaPlayerWrapper implements MusicPlayer {
     private MediaPlayer player;
 
     private String mediaSource;
@@ -39,7 +39,7 @@ public class AndroidMediaPlayer implements MusicPlayer {
     private ReadyListener readyListener;
     private CompletionListener completionListener;
 
-    public AndroidMediaPlayer(String mediaSource, float volume, Context context) {
+    public MediaPlayerWrapper(String mediaSource, float volume, Context context) {
         this.mediaSource = mediaSource;
         this.volume = volume;
     }

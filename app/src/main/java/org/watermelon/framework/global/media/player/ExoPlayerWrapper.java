@@ -6,17 +6,19 @@ import android.view.Surface;
 
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-import org.watermelon.framework.global.consts.Constants;
 import org.watermelon.framework.global.media.listener.CompletionListener;
 import org.watermelon.framework.global.media.listener.ReadyListener;
+import org.watermelon.framework.global.model.application.Initializer;
 
-public class ExoMediaPlayer implements MusicPlayer {
+public class ExoPlayerWrapper implements MusicPlayer {
     private SimpleExoPlayer player;
     private Context mContext;
 
@@ -30,7 +32,7 @@ public class ExoMediaPlayer implements MusicPlayer {
     private ReadyListener readyListener;
     private CompletionListener completionListener;
 
-    public ExoMediaPlayer(String mediaSource, float volume, Context context) {
+    public ExoPlayerWrapper(String mediaSource, float volume, Context context) {
         this.mediaSource = mediaSource;
         this.volume = volume;
         this.mContext = context;
@@ -190,13 +192,17 @@ public class ExoMediaPlayer implements MusicPlayer {
 
 
     private MediaSource buildMediaSource(Context context, Uri uri) {
+        String userAgent = Util.getUserAgent(context, Initializer.getSharedPreferenceName());
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, userAgent);
+
         // Produces DataSource instances through which media data is loaded.
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, Constants.SP_NAME));
-        return new HlsMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(uri);
-        // This is the MediaSource representing the media to be played.
-//        return new ProgressiveMediaSource.Factory(dataSourceFactory)
-//                .createMediaSource(uri);
+        if(uri.getLastPathSegment().endsWith("mp3") || uri.getLastPathSegment().endsWith("mp4")){
+            return new ProgressiveMediaSource.Factory(dataSourceFactory)
+                    .createMediaSource(uri);
+        }else if(uri.getLastPathSegment().endsWith("m3u8")){
+            return new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
+        }else{
+            return new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
+        }
     }
 }

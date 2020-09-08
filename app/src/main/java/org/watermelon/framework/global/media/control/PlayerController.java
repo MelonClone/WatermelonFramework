@@ -3,7 +3,7 @@ package org.watermelon.framework.global.media.control;
 import android.view.Surface;
 
 import org.watermelon.framework.global.media.listener.MusicChangedListener;
-import org.watermelon.framework.global.media.player.ExoMediaPlayer;
+import org.watermelon.framework.global.media.player.ExoPlayerWrapper;
 import org.watermelon.framework.global.media.player.MusicPlayer;
 
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ public class PlayerController extends Thread implements VideoPlayerControl {
     public void startPlayer() {
         if (mediaPlayer != null) {
             if (!initiate) {
-                if (mediaPlayer instanceof ExoMediaPlayer) {
+                if (mediaPlayer instanceof ExoPlayerWrapper) {
                     // ExoPlayer must play in Main Thread
                     playerInit();
                     startPlayer();

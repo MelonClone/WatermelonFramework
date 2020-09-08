@@ -16,4 +16,12 @@ public class Initializer {
         Initializer.dbName = dbName;
         Initializer.spName = spName;
     }
+
+    public static boolean isInitSP() {
+        return spName != null && !spName.equals("");
+    }
+
+    public static boolean isInitDB() {
+        return dbName != null && !dbName.equals("");
+    }
 }
