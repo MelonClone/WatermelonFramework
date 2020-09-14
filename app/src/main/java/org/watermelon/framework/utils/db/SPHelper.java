@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import org.watermelon.framework.global.consts.Constants;
 import org.watermelon.framework.global.model.application.Initializer;
+import org.watermelon.framework.global.model.application.SharedPreferenceInitiator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,15 +29,14 @@ public class SPHelper {
     }
 
     public void init(Context context) {
-        if (Initializer.isInitSP()) {
-            this.mContext = context;
-        }
+        this.mContext = context;
     }
 
     public void set(Map<String, String> map) {
         try {
             if (mContext == null) throw new SPNotInitializedException();
-            SharedPreferences sp = mContext.getSharedPreferences(Initializer.getSharedPreferenceName(), 0);
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    ((SharedPreferenceInitiator) Initializer.getInitiator("SP")).getSharedPreferenceName(), 0);
             SharedPreferences.Editor editor = sp.edit();
 
             for (String key : map.keySet()) {
@@ -52,7 +52,8 @@ public class SPHelper {
     public void set(String key, String value) {
         try {
             if (mContext == null) throw new SPNotInitializedException();
-            SharedPreferences sp = mContext.getSharedPreferences(Initializer.getSharedPreferenceName(), 0);
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    ((SharedPreferenceInitiator) Initializer.getInitiator("SP")).getSharedPreferenceName(), 0);
             SharedPreferences.Editor editor = sp.edit();
 
             editor.putString(key, value);
@@ -67,7 +68,8 @@ public class SPHelper {
         HashMap<String, String> map = new HashMap<>();
         try {
             if (mContext == null) throw new SPNotInitializedException();
-            SharedPreferences sp = mContext.getSharedPreferences(Initializer.getSharedPreferenceName(), 0);
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    ((SharedPreferenceInitiator) Initializer.getInitiator("SP")).getSharedPreferenceName(), 0);
 
             Map<String, ?> spMap = sp.getAll();
             if (spMap.isEmpty()) {
@@ -88,7 +90,8 @@ public class SPHelper {
         String value = "";
         try {
             if (mContext == null) throw new SPNotInitializedException();
-            SharedPreferences sp = mContext.getSharedPreferences(Initializer.getSharedPreferenceName(), 0);
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    ((SharedPreferenceInitiator) Initializer.getInitiator("SP")).getSharedPreferenceName(), 0);
             value = sp.getString(key, "");
         } catch(SPNotInitializedException e) {
             e.printStackTrace();
@@ -99,7 +102,8 @@ public class SPHelper {
     public void clear() {
         try {
             if (mContext == null) throw new SPNotInitializedException();
-            SharedPreferences sp = mContext.getSharedPreferences(Initializer.getSharedPreferenceName(), 0);
+            SharedPreferences sp = mContext.getSharedPreferences(
+                    ((SharedPreferenceInitiator) Initializer.getInitiator("SP")).getSharedPreferenceName(), 0);
             SharedPreferences.Editor editor = sp.edit();
             editor.clear();
             editor.apply();

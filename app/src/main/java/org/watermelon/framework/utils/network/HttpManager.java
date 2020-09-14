@@ -10,13 +10,13 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static org.watermelon.framework.global.consts.Constants.API_PROTOCOL;
-import static org.watermelon.framework.global.consts.Constants.API_SERVER;
-
 public class HttpManager {
 
     private static OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-    private static String BASE_URL = API_PROTOCOL + API_SERVER;
+    private static String BASE_URL;
+    public static void setBaseUrl(String url) {
+        BASE_URL = url;
+    }
 
     public static <S> S createService(Class<S> serviceClass) {
         String url = BASE_URL;

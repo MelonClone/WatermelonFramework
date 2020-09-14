@@ -23,7 +23,7 @@ public class HttpSender {
         HttpURLConnection connection = HttpConnector.post(method, serverUrl);
 
         // TODO Do something on HttpConnectionService
-        T data = message.send();
+        T data = message.send(connection);
         callback.onResponse(connection, data);
         HttpConnector.disconnect(connection);
     }

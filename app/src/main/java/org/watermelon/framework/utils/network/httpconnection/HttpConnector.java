@@ -65,7 +65,7 @@ public class HttpConnector {
         });
     }
 
-    enum HttpMethod { GET, POST, DELETE, PUT }
+    public enum HttpMethod { GET, POST, DELETE, PUT }
 
     public static HttpURLConnection post(HttpMethod method, String serverUrl) {
         try {

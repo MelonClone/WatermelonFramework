@@ -17,6 +17,7 @@ import com.google.android.exoplayer2.util.Util;
 import org.watermelon.framework.global.media.listener.CompletionListener;
 import org.watermelon.framework.global.media.listener.ReadyListener;
 import org.watermelon.framework.global.model.application.Initializer;
+import org.watermelon.framework.global.model.application.SharedPreferenceInitiator;
 
 public class ExoPlayerWrapper implements MusicPlayer {
     private SimpleExoPlayer player;
@@ -192,7 +193,8 @@ public class ExoPlayerWrapper implements MusicPlayer {
 
 
     private MediaSource buildMediaSource(Context context, Uri uri) {
-        String userAgent = Util.getUserAgent(context, Initializer.getSharedPreferenceName());
+        String userAgent = Util.getUserAgent(context,
+                ((SharedPreferenceInitiator) Initializer.getInitiator("SP")).getSharedPreferenceName());
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context, userAgent);
 
         // Produces DataSource instances through which media data is loaded.

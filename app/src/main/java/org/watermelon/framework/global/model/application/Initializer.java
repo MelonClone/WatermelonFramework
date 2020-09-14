@@ -1,27 +1,46 @@
 package org.watermelon.framework.global.model.application;
 
+import android.content.Context;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 public class Initializer {
-    private static String dbName = "";
-    private static String spName = "";
+    static Map<String, Initializable> initializableList = new HashMap<>();
 
-    public static String getDatabaseName() {
-        return dbName;
+    public static void addInitiator(Initializable initiator) {
+        if (!initializableList.containsKey(initiator.getTag())) {
+            initializableList.put(initiator.getTag(), initiator);
+        }
     }
 
-    public static String getSharedPreferenceName() {
-        return spName;
+    public static void init(Context appContext) {
+        for (String tag : initializableList.keySet()) {
+            try {
+                Objects.requireNonNull(initializableList.get(tag)).init(appContext);
+            } catch (NullPointerException e) {
+            }
+        }
     }
 
-    public static void init(String dbName, String spName) {
-        Initializer.dbName = dbName;
-        Initializer.spName = spName;
+    public static boolean isInit(String tag) {
+        try {
+            return Objects.requireNonNull(initializableList.get(tag)).isInit();
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
-    public static boolean isInitSP() {
-        return spName != null && !spName.equals("");
+    public static boolean isInit(Initializable initiator) {
+        try {
+            return Objects.requireNonNull(initializableList.get(initiator.getTag())).isInit();
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
-    public static boolean isInitDB() {
-        return dbName != null && !dbName.equals("");
+    public static Initializable getInitiator(String tag) {
+        return initializableList.get(tag);
     }
 }

@@ -2,34 +2,16 @@ package org.watermelon.framework.global.model.application;
 
 import android.app.Application;
 
-import androidx.room.RoomDatabase;
-
-import org.watermelon.framework.global.db.version.MigrationContainer;
-import org.watermelon.framework.utils.TypefaceUtil;
-import org.watermelon.framework.utils.db.DBHelper;
-import org.watermelon.framework.utils.db.SPHelper;
-
 public abstract class BaseApplication extends Application {
 
-    public abstract String getDatabaseName();
-    public abstract String getSharedPreferenceName();
-    public abstract <D extends RoomDatabase> Class<D> getDatabaseClass();
-    public abstract MigrationContainer getMigrationContainer();
+    public abstract void initiate();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Initializer.init(
-                getDatabaseName(),
-                getSharedPreferenceName()
-        );
+        initiate();
 
-        if (getDatabaseClass() != null) {
-            DBHelper.getInstance().init(this, getDatabaseClass(), getMigrationContainer());
-        }
-        SPHelper.getInstance().init(this);
-
-        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/NotoSans-Regular.ttf");
+        Initializer.init(this);
     }
 
 
